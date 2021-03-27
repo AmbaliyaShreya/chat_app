@@ -114,6 +114,12 @@ class _AuthFormState extends State<AuthForm> {
       print(result.toString());
       // Create a credential from the access token
       final FacebookAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.toString());
+      final token = result.token;
+      final graphResponse = await http.get(
+          'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}');
+      final profile = JSON.decode(graphResponse.body);
+      print("in facebook log in");
+      print(profile);
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance
           .signInWithCredential(facebookAuthCredential);
